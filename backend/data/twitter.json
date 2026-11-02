@@ -1,0 +1,52 @@
+[
+  {
+    "name": "#TechNews",
+    "tweet_volume": 98000,
+    "url": "https://twitter.com/search?q=%23TechNews"
+  },
+  {
+    "name": "#Startups",
+    "tweet_volume": 87000,
+    "url": "https://twitter.com/search?q=%23Startups"
+  },
+  {
+    "name": "#Programming",
+    "tweet_volume": 76000,
+    "url": "https://twitter.com/search?q=%23Programming"
+  },
+  {
+    "name": "#DevOps",
+    "tweet_volume": 65000,
+    "url": "https://twitter.com/search?q=%23DevOps"
+  },
+  {
+    "name": "#CloudComputing",
+    "tweet_volume": 58000,
+    "url": "https://twitter.com/search?q=%23CloudComputing"
+  },
+  {
+    "name": "#DataScience",
+    "tweet_volume": 52000,
+    "url": "https://twitter.com/search?q=%23DataScience"
+  },
+  {
+    "name": "#CyberSecurity",
+    "tweet_volume": 48000,
+    "url": "https://twitter.com/search?q=%23CyberSecurity"
+  },
+  {
+    "name": "#MobileDev",
+    "tweet_volume": 42000,
+    "url": "https://twitter.com/search?q=%23MobileDev"
+  },
+  {
+    "name": "#Python",
+    "tweet_volume": 39000,
+    "url": "https://twitter.com/search?q=%23Python"
+  },
+  {
+    "name": "#TypeScript",
+    "tweet_volume": 35000,
+    "url": "https://twitter.com/search?q=%23TypeScript"
+  }
+]

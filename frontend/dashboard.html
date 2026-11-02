@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TrendTracker Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      color-scheme: dark;
+      --bg: #050711;
+      --surface: rgba(16, 24, 40, 0.8);
+      --surface-strong: rgba(15, 23, 42, 0.95);
+      --border: rgba(148, 163, 184, 0.12);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --accent-strong: #38bdf8;
+      --shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+    }
+    html, body { margin: 0; min-height: 100%; background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 22%), radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.1), transparent 18%), linear-gradient(145deg, #020617 0%, #07111f 52%, #09101a 100%); color: var(--text); font-family: 'Inter', sans-serif; }
+    body { overflow-x: hidden; }
+    button, a { font: inherit; }
+    .shell { max-width: 1440px; margin: 0 auto; padding: 32px 40px 80px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: inline-flex; align-items: center; gap: 14px; font-weight: 700; letter-spacing: 0.05em; color: #fff; }
+    .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; background: linear-gradient(135deg, #22d3ee, #818cf8); border-radius: 14px; color: #020617; font-weight: 800; box-shadow: 0 18px 45px rgba(34, 211, 238, 0.2); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0.95rem 1.6rem; border: none; cursor: pointer; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-strong)); color: #020617; box-shadow: 0 18px 40px rgba(34, 211, 238, 0.18); }
+    .btn-secondary { background: rgba(148, 163, 184, 0.1); color: var(--text); border: 1px solid rgba(148, 163, 184, 0.18); }
+    .btn-signin { background: #0f172a; color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.22); padding: 0.85rem 1.4rem; border-radius: 999px; letter-spacing: 0.02em; }
+    .hero-panel { display: grid; grid-template-columns: 1fr 0.75fr; gap: 28px; align-items: start; margin-bottom: 42px; }
+    .dashboard-card { background: var(--surface-strong); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 32px; padding: 28px; box-shadow: var(--shadow); }
+    .dashboard-card .tabs { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+    .dashboard-card .tab { padding: 0.85rem 1.4rem; background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid transparent; border-radius: 999px; transition: 0.2s ease; }
+    .dashboard-card .tab.active { background: linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(56, 189, 248, 0.18)); border-color: rgba(56, 189, 248, 0.32); color: #fff; }
+    .dashboard-card .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+    .dashboard-card .top-bar h3 { margin: 0; font-size: 1.4rem; }
+    .dashboard-card .top-bar-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .dashboard-card .top-bar span { color: var(--muted); font-size: 0.95rem; }
+    .btn-refresh { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0.85rem 1.4rem; background: rgba(56, 189, 248, 0.12); color: var(--text); border: 1px solid rgba(56, 189, 248, 0.18); cursor: pointer; transition: transform 0.2s ease, background 0.2s ease; }
+    .btn-refresh:hover { transform: translateY(-1px); background: rgba(56, 189, 248, 0.22); }
+    .live-feed-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+    .feed-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(148, 163, 184, 0.12); border-radius: 20px; overflow: hidden; opacity: 1; transform: translateY(0); transition: transform 0.4s ease, opacity 0.4s ease; }
+    .feed-item.fade-out { opacity: 0; transform: translateY(12px); }
+    .feed-link { width: 100%; border: none; background: transparent; padding: 16px 18px; display: flex; gap: 16px; align-items: center; cursor: pointer; text-align: left; color: inherit; }
+    .feed-badge { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 16px; background: rgba(34, 211, 238, 0.15); color: #22d3ee; font-weight: 700; }
+    .feed-link strong { display: block; font-size: 0.98rem; margin-bottom: 6px; }
+    .feed-link span { color: var(--muted); font-size: 0.95rem; }
+    .panel-insight { margin-top: 24px; border-top: 1px solid rgba(148, 163, 184, 0.1); padding-top: 20px; }
+    .insight-label { display: inline-block; margin-bottom: 12px; color: #fb7185; letter-spacing: 0.11em; text-transform: uppercase; font-size: 0.82rem; }
+    .panel-insight p { margin: 0; color: var(--muted); line-height: 1.8; font-size: 0.97rem; }
+    .hero-copy { display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding: 40px 42px; border-radius: 36px; background: var(--surface); border: 1px solid rgba(148, 163, 184, 0.08); box-shadow: var(--shadow); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .panel { width: 100%; background: rgba(10, 18, 31, 0.9); border: 1px solid rgba(148, 163, 184, 0.12); border-radius: 32px; padding: 28px 28px 24px; box-shadow: var(--shadow); position: relative; }
+    .panel-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 24px; }
+    .panel-header h2 { margin: 0; font-size: 1.55rem; line-height: 1.1; }
+    .panel-overline { display: inline-block; font-size: 0.88rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .status-dot { width: 12px; height: 12px; border-radius: 50%; margin-top: 8px; box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.08); }
+    .status-dot.online { background: #22d3ee; }
+    .live-feed-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+    .feed-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(148, 163, 184, 0.12); border-radius: 20px; overflow: hidden; }
+    .feed-link { width: 100%; border: none; background: transparent; padding: 16px 18px; display: flex; gap: 16px; align-items: center; cursor: pointer; text-align: left; color: inherit; }
+    .feed-badge { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 16px; background: rgba(34, 211, 238, 0.15); color: #22d3ee; font-weight: 700; }
+    .feed-link strong { display: block; font-size: 0.98rem; margin-bottom: 6px; }
+    .feed-link span { color: var(--muted); font-size: 0.95rem; }
+    .panel-insight { margin-top: 24px; border-top: 1px solid rgba(148, 163, 184, 0.1); padding-top: 20px; }
+    .insight-label { display: inline-block; margin-bottom: 12px; color: #fb7185; letter-spacing: 0.11em; text-transform: uppercase; font-size: 0.82rem; }
+    .panel-insight p { margin: 0; color: var(--muted); line-height: 1.8; font-size: 0.97rem; }
+    .hero-copy { display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding: 40px 42px; border-radius: 36px; background: var(--surface); border: 1px solid rgba(148, 163, 184, 0.08); box-shadow: var(--shadow); }
+    .eyebrow { font-size: 0.95rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin: 0; }
+    h1 { margin: 0; font-size: clamp(3rem, 3.8vw, 4.6rem); line-height: 0.95; letter-spacing: -0.06em; max-width: 770px; }
+    h1 span { color: #22d3ee; }
+    .hero-copy p { color: var(--muted); max-width: 680px; line-height: 1.8; font-size: 1.05rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 16px; }
+    .source-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .source-tile { display: flex; align-items: center; gap: 16px; padding: 18px; border-radius: 22px; background: rgba(255,255,255,0.05); border: 1px solid rgba(148, 163, 184, 0.08); min-height: 100px; }
+    .tile-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: rgba(30, 41, 59, 0.75); border: 1px solid rgba(148, 163, 184, 0.14); color: #fff; font-weight: 700; }
+    .source-tile strong { display: block; margin-bottom: 6px; color: #fff; }
+    .source-tile p { margin: 0; color: var(--muted); line-height: 1.5; font-size: 0.95rem; }
+    .info-section { display: grid; gap: 20px; }
+    .info-card { padding: 40px; border-radius: 32px; background: rgba(15, 23, 42, 0.92); border: 1px solid rgba(148, 163, 184, 0.08); box-shadow: var(--shadow); }
+    .info-card h2 { margin: 16px 0 0; font-size: clamp(2.1rem, 2.6vw, 3rem); line-height: 1.02; }
+    .info-card p { margin: 16px 0 0; color: var(--muted); line-height: 1.8; max-width: 760px; }
+    .dashboard-intro { display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+    .dashboard-intro h2 { margin: 0 0 12px; font-size: clamp(2.1rem, 2.8vw, 3rem); line-height: 1.05; }
+    .dashboard-intro p { margin: 0; color: var(--muted); max-width: 760px; line-height: 1.7; }
+    .tabs button { min-width: 120px; }
+    @media (max-width: 1100px) { .hero-panel { grid-template-columns: 1fr; } .hero-copy { min-height: unset; } }
+    @media (max-width: 760px) { .shell { padding: 24px 18px 48px; } .topbar { flex-direction: column; align-items: flex-start; gap: 16px; } .hero-copy, .panel, .dashboard-card, .info-card { padding: 26px; } .source-tiles { grid-template-columns: 1fr; } .dashboard-intro { align-items: stretch; } .hero-actions { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">T</div>
+        <span>TrendTracker</span>
+      </div>
+      <div class="top-actions">
+        <a href="index.html" class="btn btn-secondary">Home</a>
+        <a href="auth.html" class="btn btn-signin">Sign in with Google</a>
+      </div>
+    </header>
+
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <div>
+          <p class="eyebrow">// live.dashboard</p>
+          <h1>Signal room for engineering trends.</h1>
+          <p>View the top trending sources from GitHub, Twitter, and Reddit in one place, then click into the signal to see what’s moving right now.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="dashboard-card">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('github')">GitHub</button>
+        <button class="tab" onclick="switchTab('twitter')">Twitter</button>
+        <button class="tab" onclick="switchTab('reddit')">Reddit</button>
+      </div>
+
+      <div class="top-bar">
+        <h3 id="chartTitle">Trending Repositories</h3>
+        <div class="top-bar-actions">
+          <span id="lastUpdated">Last updated: just now</span>
+          <button class="btn-refresh" onclick="fetchAndRenderChart(currentTab)">Refresh trends</button>
+        </div>
+      </div>
+
+      <div id="spinner" class="spinner-shell" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading chart...</p>
+      </div>
+
+      <div id="chart"></div>
+    </div>
+  </div>
+
+  <script>
+    let chartInstance = null;
+    let currentTab = 'github';
+    let urls = [];
+    let liveFeedItems = [];
+    let liveFeedRotation = null;
+
+    const sourceConfig = {
+      github: {
+        title: 'Trending Repositories',
+        label: item => `${truncate(item.author, 10)}/${truncate(item.name, 18)}`,
+        value: item => item.stars,
+        metric: 'Stars',
+        tooltip: item => `
+            <div style="padding:14px;line-height:1.5;max-width:320px;word-break:break-word;border-radius:18px;background:rgba(15,23,42,0.95);box-shadow:0 24px 60px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);">
+              <strong style="display:block;margin-bottom:8px;color:#fff;">${item.author}/${item.name}</strong>
+              <div style="color:#94a3b8;font-size:0.95rem;margin-bottom:8px;">${item.description || 'No description available'}</div>
+              <div style="font-size:0.92rem;line-height:1.6;color:#e2e8f0;">⭐ ${item.stars.toLocaleString()} stars · 🧑‍💻 ${item.language || 'N/A'}</div>
+            </div>`
+      },
+      twitter: {
+        title: 'Trending Topics',
+        label: item => truncate(item.name, 18),
+        value: item => item.tweet_volume || 1,
+        metric: 'Tweet volume',
+        tooltip: item => `
+            <div style="padding:14px;line-height:1.5;max-width:320px;word-break:break-word;border-radius:18px;background:rgba(15,23,42,0.95);box-shadow:0 24px 60px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);">
+              <strong style="display:block;margin-bottom:8px;color:#fff;">${item.name}</strong>
+              <div style="font-size:0.92rem;line-height:1.6;color:#e2e8f0;">🐦 ${item.tweet_volume ? item.tweet_volume.toLocaleString() : 'N/A'} tweets</div>
+            </div>`
+      },
+      reddit: {
+        title: 'Hot Posts',
+        label: item => item.subreddit ? `r/${item.subreddit}: ${truncate(item.title, 24)}` : truncate(item.title, 24),
+        value: item => item.score || 1,
+        metric: 'Score',
+        tooltip: item => `
+            <div style="padding:14px;line-height:1.5;max-width:320px;word-break:break-word;border-radius:18px;background:rgba(15,23,42,0.95);box-shadow:0 24px 60px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);">
+              <strong style="display:block;margin-bottom:8px;color:#fff;">${item.title}</strong>
+              <div style="font-size:0.92rem;line-height:1.6;color:#e2e8f0;">📌 ${item.subreddit || 'unknown'} · 👍 ${item.score} points · 💬 ${item.comments} comments</div>
+            </div>`
+      }
+    };
+
+    function truncate(text, maxLength = 40) {
+      return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
+    }
+
+    function getRandomItems(items, count = 7) {
+      const copy = [...items];
+      const chosen = [];
+      while (chosen.length < count && copy.length) {
+        const index = Math.floor(Math.random() * copy.length);
+        chosen.push(copy.splice(index, 1)[0]);
+      }
+      return chosen;
+    }
+
+    function renderLiveFeed(items) {
+      const list = document.getElementById('liveFeedList');
+      const current = Array.from(list.children);
+
+      current.forEach(item => item.classList.add('fade-out'));
+      setTimeout(() => {
+        list.innerHTML = '';
+        items.forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'feed-item';
+          li.innerHTML = `
+            <button type="button" class="feed-link" onclick="window.open('${item.url}', '_blank')">
+              <span class="feed-badge">${item.badge}</span>
+              <div>
+                <strong>${item.title}</strong>
+                <span>${item.subtitle}</span>
+              </div>
+            </button>`;
+          list.appendChild(li);
+        });
+      }, 280);
+    }
+
+    async function fetchAndRenderChart(source = "github") {
+      try {
+        document.getElementById("spinner").style.display = "flex";
+        if (chartInstance) chartInstance.destroy();
+
+        const res = await fetch(`/api/${source}`);
+        const data = await res.json();
+        const config = sourceConfig[source] || sourceConfig.github;
+
+        document.getElementById('chartTitle').textContent = config.title;
+
+        if (!data.length) {
+          alert("⚠️ No data found.");
+          document.getElementById("spinner").style.display = "none";
+          return;
+        }
+
+        const labels = data.map(config.label);
+        const values = data.map(config.value);
+        urls = data.map(item => item.url);
+
+        const options = {
+          chart: {
+            type: 'bar',
+            height: 480,
+            animations: {
+              enabled: true,
+              easing: 'easeinout',
+              speed: 600,
+              animateGradually: { enabled: true, delay: 80 },
+              dynamicAnimation: { enabled: true, speed: 350 }
+            },
+            events: {
+              dataPointSelection: function(event, chartContext, config) {
+                const index = config.dataPointIndex;
+                if (urls[index]) window.open(urls[index], '_blank');
+              }
+            },
+            toolbar: { show: false }
+          },
+          plotOptions: {
+            bar: {
+              borderRadius: 10,
+              horizontal: false,
+              distributed: true,
+              columnWidth: "52%"
+            }
+          },
+          dataLabels: { enabled: false },
+          xaxis: {
+            categories: labels,
+            labels: {
+              rotate: -45,
+              style: { colors: "#cbd5e1", fontSize: '12px', fontFamily: 'Inter' }
+            }
+          },
+          yaxis: {
+            title: { text: config.metric, style: { color: '#fff' } },
+            labels: { style: { colors: '#cbd5e1' } }
+          },
+          tooltip: {
+            theme: 'dark',
+            custom: ({ series, dataPointIndex }) => config.tooltip(data[dataPointIndex])
+          },
+          legend: { show: false },
+          colors: data.map(() => `hsl(${Math.random() * 360}, 75%, 65%)`),
+          series: [{ name: config.metric, data: values }]
+        };
+
+        chartInstance = new ApexCharts(document.querySelector("#chart"), options);
+        await chartInstance.render();
+
+        document.getElementById("spinner").style.display = "none";
+        const now = new Date();
+        document.getElementById('lastUpdated').textContent = `Last updated: ${now.toLocaleTimeString()}`;
+      } catch (err) {
+        console.error("❌ Error loading chart:", err);
+        alert("Error loading chart data.");
+        document.getElementById("spinner").style.display = "none";
+      }
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.tab[onclick*="${tab}"]`).classList.add('active');
+      fetchAndRenderChart(tab);
+    }
+
+    fetchAndRenderChart();
+  </script>
+</body>
+</html>
