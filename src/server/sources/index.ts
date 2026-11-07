@@ -1,3 +1,4 @@
+import { blueskySource } from "./bluesky";
 import { hackernewsSource } from "./hackernews";
 import { lobstersSource } from "./lobsters";
 import { mastodonSource } from "./mastodon";
@@ -13,4 +14,5 @@ export const adapters: SourceAdapter[] = [
   hackernewsSource,
   lobstersSource,
   mastodonSource,
+  blueskySource,
 ];

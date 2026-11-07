@@ -4,10 +4,19 @@ export type Period = "day" | "week" | "month";
 
 export type RepoStatus = "new" | "hot" | "rising" | "steady" | "cooling";
 
-export const MENTION_SOURCES = ["youtube", "hackernews", "lobsters", "mastodon"] as const;
+export const MENTION_SOURCES = ["youtube", "hackernews", "lobsters", "mastodon", "bluesky"] as const;
 export type MentionSource = (typeof MENTION_SOURCES)[number];
 
-export const SOURCE_IDS = ["trending", "search", "youtube", "hackernews", "lobsters", "mastodon", "github"] as const;
+export const SOURCE_IDS = [
+  "trending",
+  "search",
+  "youtube",
+  "hackernews",
+  "lobsters",
+  "mastodon",
+  "bluesky",
+  "github",
+] as const;
 export type SourceId = (typeof SOURCE_IDS)[number];
 
 export interface RepoSummary {

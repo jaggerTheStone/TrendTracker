@@ -249,6 +249,7 @@ const SCORE_UNIT: Record<Mention["source"], string> = {
   hackernews: "pts",
   lobsters: "pts",
   mastodon: "partage",
+  bluesky: "inter.",
 };
 
 function MentionMeta({ mention }: { mention: Mention }) {

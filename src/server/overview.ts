@@ -106,6 +106,7 @@ const BUZZ_WEIGHT: Record<MentionSource, (score: number) => number> = {
   hackernews: (points) => 1 + Math.min(points / 100, 3),
   lobsters: (points) => 0.8 + Math.min(points / 40, 1),
   mastodon: (boosts) => 0.4 + Math.min(boosts / 50, 0.6),
+  bluesky: (interactions) => 0.4 + Math.min(interactions / 50, 0.6),
 };
 
 export interface ScoringInput {
