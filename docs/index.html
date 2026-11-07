@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TrendTracker · real-time radar of rising GitHub repositories</title>
+    <meta
+      name="description"
+      content="Open-source, self-hosted radar of the GitHub repositories taking off: live star counts every minute, momentum scores, trend radar, buzz from YouTube and Hacker News."
+    />
+    <link rel="icon" href="logo.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="TrendTracker · real-time radar of rising GitHub repositories" />
+    <meta
+      property="og:description"
+      content="Live star counts every minute, momentum scores, a trend radar and buzz from YouTube and Hacker News. Open source, MIT."
+    />
+    <meta property="og:url" content="https://jaggerthestone.github.io/TrendTracker/" />
+    <meta property="og:image" content="https://jaggerthestone.github.io/TrendTracker/social-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0d1117;
+        --panel: #151b23;
+        --line: #30363d;
+        --fg: #f0f6fc;
+        --muted: #9198a1;
+        --accent: #4493f8;
+        --green: #3fb950;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          "Mona Sans",
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--fg);
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--fg);
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .btn:hover {
+        border-color: #4d5560;
+      }
+      .btn.primary {
+        background: #238636;
+        border-color: #2ea043;
+        color: #fff;
+      }
+      .btn.primary:hover {
+        background: #2ea043;
+      }
+      .hero {
+        text-align: center;
+        padding: 56px 0 28px;
+        background: radial-gradient(700px 300px at 50% 0%, rgba(56, 139, 253, 0.16), transparent 70%);
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.6);
+        animation: ping 1.8s infinite;
+      }
+      @keyframes ping {
+        to {
+          box-shadow: 0 0 0 8px rgba(63, 185, 80, 0);
+        }
+      }
+      h1 {
+        font-size: clamp(36px, 6vw, 64px);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        margin: 18px auto 14px;
+        max-width: 860px;
+      }
+      .lead {
+        font-size: clamp(17px, 2.2vw, 20px);
+        color: var(--muted);
+        max-width: 720px;
+        margin: 0 auto 26px;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .demo {
+        margin: 40px auto 0;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      }
+      .demo img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      section {
+        padding: 56px 0 8px;
+      }
+      h2 {
+        font-size: 28px;
+        letter-spacing: -0.01em;
+        margin: 0 0 20px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 10px;
+        padding: 18px;
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 17px;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .shots {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .shots img {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        display: block;
+      }
+      pre {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 16px 18px;
+        overflow-x: auto;
+        font-size: 14.5px;
+        line-height: 1.6;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        margin-top: 64px;
+        padding: 24px 0 40px;
+        color: var(--muted);
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      @media (max-width: 700px) {
+        .shots {
+          grid-template-columns: 1fr;
+        }
+        .hide-sm {
+          display: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .dot {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <a class="brand" href="./"><img src="logo.svg" alt="" />TrendTracker</a>
+        <a class="btn" href="https://github.com/jaggerTheStone/TrendTracker">★ Star on GitHub</a>
+      </header>
+    </div>
+
+    <div class="hero">
+      <div class="wrap">
+        <span class="pill"><span class="dot"></span>Star counts refreshed every minute</span>
+        <h1>See which GitHub repositories are taking off, as it happens.</h1>
+        <p class="lead">
+          TrendTracker watches GitHub Trending, new repositories and the videos and posts that mention them. It keeps
+          its own history, scores momentum, and shows it all on a live radar. Open source and self-hosted.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="https://github.com/jaggerTheStone/TrendTracker#quick-start">Get started</a>
+          <a class="btn" href="https://github.com/jaggerTheStone/TrendTracker">View on GitHub</a>
+        </div>
+        <div class="demo">
+          <img
+            src="screenshots/radar-demo.gif"
+            alt="The radar switching between momentum, stars in 24 hours and acceleration"
+            width="1120"
+            height="900"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section>
+        <h2>What you get</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Live, not daily</h3>
+            <p>
+              Every repository on screen is re-read each minute and pushed to the page. Counters tick, the radar
+              ripples.
+            </p>
+          </div>
+          <div class="card">
+            <h3>A real radar</h3>
+            <p>
+              One spoke per repository, sectors by domain, strongest in the centre. Switch between momentum, 24 h stars
+              and acceleration.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Numbers that add up</h3>
+            <p>
+              Gains over 24 h, 7 and 30 days from our own snapshots: always consistent, and "—" rather than a guess.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Who talks about it</h3>
+            <p>
+              YouTube videos from 20 developer channels, Hacker News, Lobsters and Mastodon, linked to each repository.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Trending, archived</h3>
+            <p>
+              GitHub Trending by day, week, month and language, kept every day, sortable by rank or by stars gained.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Follow and get alerts</h3>
+            <p>
+              Boards with notes, public sharing, and an e-mail when a repository you follow enters Trending or spikes.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Screenshots</h2>
+        <div class="shots">
+          <img src="screenshots/pulse.png" alt="Pulse: the day at a glance" loading="lazy" />
+          <img src="screenshots/repo.png" alt="Repository page with live gains and charts" loading="lazy" />
+          <img src="screenshots/trending.png" alt="GitHub Trending archive in the light theme" loading="lazy" />
+          <img src="screenshots/radar.png" alt="The radar in full resolution" loading="lazy" />
+        </div>
+      </section>
+
+      <section>
+        <h2>Run it in a minute</h2>
+        <pre><code>git clone https://github.com/jaggerTheStone/TrendTracker.git
+cd TrendTracker
+npm install
+npm run dev     # http://localhost:3000</code></pre>
+        <p class="muted">
+          No database to install: an embedded Postgres is created on first run. Add a GitHub token with no scope for
+          live counts every minute. Node.js 20.9 or later. The interface is in French for now; English is next on the
+          <a href="https://github.com/jaggerTheStone/TrendTracker#roadmap">roadmap</a>.
+        </p>
+      </section>
+
+      <footer>
+        <span>MIT licensed · built with Next.js, React, Drizzle and Postgres</span>
+        <span
+          ><a href="https://github.com/jaggerTheStone/TrendTracker">GitHub</a> ·
+          <a href="https://github.com/jaggerTheStone/TrendTracker/releases">Releases</a> ·
+          <a href="https://github.com/jaggerTheStone/TrendTracker/discussions">Discussions</a></span
+        >
+      </footer>
+    </div>
+  </body>
+</html>

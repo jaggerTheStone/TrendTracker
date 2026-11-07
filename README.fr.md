@@ -6,11 +6,11 @@
 
 <p align="center">
   <b>Le radar en temps réel des dépôts GitHub qui montent.</b><br />
-  <a href="README.md">English</a> · Français
+  <a href="https://jaggerthestone.github.io/TrendTracker/"><b>Site</b></a> · <a href="README.md">English</a> · Français
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/radar.png" alt="Le radar de TrendTracker" width="100%" />
+  <img src="docs/screenshots/radar-demo.gif" alt="Le radar de TrendTracker en direct" width="100%" />
 </p>
 
 Le radar des dépôts GitHub qui montent. Tu entends parler d'un projet dans une vidéo ou un post : colle le lien,

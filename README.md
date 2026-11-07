@@ -19,11 +19,11 @@
 </p>
 
 <p align="center">
-  English · <a href="README.fr.md">Français</a>
+  <a href="https://jaggerthestone.github.io/TrendTracker/"><b>Website</b></a> · English · <a href="README.fr.md">Français</a>
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/radar.png" alt="TrendTracker radar: one spoke per repository, sectors by domain, strongest in the centre" width="100%" />
+  <img src="docs/screenshots/radar-demo.gif" alt="TrendTracker radar switching between momentum, stars in 24 h and acceleration, live" width="100%" />
 </p>
 
 You hear about a project in a video or a post. Paste the link and TrendTracker shows where it comes from, how fast it is
