@@ -1,0 +1,1 @@
+ALTER TABLE "repo_cache" ADD COLUMN "merged_prs" jsonb;

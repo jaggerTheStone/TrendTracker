@@ -1,0 +1,23 @@
+# Calls the deployed app every 5 minutes (GitHub's shortest schedule) so it collects fresh data.
+# For star counts refreshed every minute, run the app on a long-lived server (`next start`)
+# or have any one-minute cron call POST /api/ingest?live with the same header.
+# Repository settings → Secrets and variables → Actions:
+#   - variable APP_URL     (e.g. https://trendtracker.vercel.app)
+#   - secret   CRON_SECRET (same value as the app's CRON_SECRET)
+name: Ingest trends
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    if: vars.APP_URL != ''
+    steps:
+      - name: Trigger collection
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 90 \
+            -X POST "${{ vars.APP_URL }}/api/ingest" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

@@ -1,0 +1,6 @@
+legacy/
+drizzle/meta/
+.next/
+.data/
+docs/screenshots/
+package-lock.json

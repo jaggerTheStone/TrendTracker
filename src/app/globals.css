@@ -1,0 +1,382 @@
+@import "tailwindcss";
+
+/*
+ * GitHub Primer palette, light and dark. An inline script in the layout sets
+ * data-theme on <html> before first paint, from the user's setting or the system.
+ */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --font-sans: var(--font-mona), -apple-system, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-canvas: var(--canvas);
+  --color-subtle: var(--canvas-subtle);
+  --color-inset: var(--canvas-inset);
+  --color-line: var(--line);
+  --color-line-muted: var(--line-muted);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-faint: var(--fg-faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-danger: var(--danger);
+  --color-attention: var(--attention);
+  --color-done: var(--done);
+  --color-btn: var(--btn);
+  --color-btn-hover: var(--btn-hover);
+  --color-hover: var(--hover);
+
+  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: light;
+  --canvas: #ffffff;
+  --canvas-subtle: #f6f8fa;
+  --canvas-inset: #f6f8fa;
+  --line: #d1d9e0;
+  --line-muted: #d1d9e0b3;
+  --fg: #1f2328;
+  --fg-muted: #59636e;
+  --fg-faint: #818b98;
+  --accent: #0969da;
+  --accent-soft: #ddf4ff;
+  --success: #1a7f37;
+  --success-soft: #dafbe1;
+  --primary: #1f883d;
+  --primary-hover: #1c8139;
+  --danger: #d1242f;
+  --attention: #9a6700;
+  --done: #8250df;
+  --btn: #f6f8fa;
+  --btn-hover: #eff2f5;
+  --hover: #f6f8fa;
+  --overlay-shadow: 0 8px 24px rgb(140 149 159 / 0.2), 0 0 0 1px var(--line);
+  --graph-0: #eff2f5;
+  --graph-1: #aceebb;
+  --graph-2: #4ac26b;
+  --graph-3: #2da44e;
+  --graph-4: #116329;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0d1117;
+  --canvas-subtle: #151b23;
+  --canvas-inset: #010409;
+  --line: #3d444d;
+  --line-muted: #3d444db3;
+  --fg: #f0f6fc;
+  --fg-muted: #9198a1;
+  --fg-faint: #656c76;
+  --accent: #4493f8;
+  --accent-soft: rgb(56 139 253 / 0.15);
+  --success: #3fb950;
+  --success-soft: rgb(46 160 67 / 0.15);
+  --primary: #238636;
+  --primary-hover: #29903b;
+  --danger: #f85149;
+  --attention: #d29922;
+  --done: #ab7df8;
+  --btn: #212830;
+  --btn-hover: #262c36;
+  --hover: #151b23;
+  --overlay-shadow: 0 8px 24px rgb(1 4 9 / 0.75), 0 0 0 1px var(--line);
+  --graph-0: #151b23;
+  --graph-1: #033a16;
+  --graph-2: #196c2e;
+  --graph-3: #2ea043;
+  --graph-4: #56d364;
+}
+
+html {
+  background: var(--canvas);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  min-height: 100dvh;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@layer components {
+  /* A bordered block, GitHub's "Box". */
+  .box {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--canvas);
+    overflow: hidden;
+  }
+
+  .bar {
+    background: color-mix(in srgb, var(--canvas) 85%, transparent);
+    backdrop-filter: blur(16px) saturate(180%);
+  }
+
+  .btn {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--btn);
+    color: var(--fg);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s,
+      transform 0.2s var(--ease-fluid);
+  }
+  .btn:hover {
+    background: var(--btn-hover);
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .btn-primary {
+    background: var(--primary);
+    border-color: rgb(0 0 0 / 0.1);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--primary-hover);
+  }
+  .btn-icon {
+    width: 32px;
+    padding: 0;
+  }
+
+  .input {
+    height: 40px;
+    width: 100%;
+    min-width: 0;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--canvas-subtle);
+    color: var(--fg);
+    font-size: 15px;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    background: var(--canvas);
+  }
+  .input::placeholder {
+    color: var(--fg-faint);
+  }
+
+  .overlay {
+    background: var(--canvas);
+    border-radius: 12px;
+    box-shadow: var(--overlay-shadow);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shimmer {
+    background: linear-gradient(100deg, var(--canvas-subtle) 30%, var(--btn-hover) 50%, var(--canvas-subtle) 70%);
+    background-size: 300% 100%;
+    animation: shimmer 1.4s linear infinite;
+  }
+
+  .fade-bottom {
+    mask-image: linear-gradient(to bottom, black 70%, transparent);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -150% 0;
+  }
+}
+
+/* ───────────── README (GitHub-like markdown) ───────────── */
+
+.readme {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+.readme :where(h1, h2, h3, h4) {
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.5em 0 0.6em;
+}
+.readme :where(h1, h2) {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--line-muted);
+}
+.readme h1 {
+  font-size: 1.75em;
+}
+.readme h2 {
+  font-size: 1.4em;
+}
+.readme h3 {
+  font-size: 1.15em;
+}
+.readme > :first-child {
+  margin-top: 0;
+}
+.readme :where(p, ul, ol, pre, table, blockquote, details) {
+  margin: 0 0 1em;
+}
+.readme :where(ul, ol) {
+  padding-left: 2em;
+}
+.readme ul {
+  list-style: disc;
+}
+.readme ol {
+  list-style: decimal;
+}
+.readme a {
+  color: var(--accent);
+}
+.readme a:hover {
+  text-decoration: underline;
+}
+.readme img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
+.readme :where(code, kbd) {
+  font-family: var(--font-mono);
+  font-size: 85%;
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--fg-muted) 15%, transparent);
+}
+.readme pre {
+  padding: 16px;
+  border-radius: 6px;
+  background: var(--canvas-subtle);
+  overflow-x: auto;
+  font-size: 85%;
+}
+.readme pre code {
+  padding: 0;
+  background: none;
+  font-size: 100%;
+}
+.readme blockquote {
+  border-left: 0.25em solid var(--line);
+  padding: 0 1em;
+  color: var(--fg-muted);
+}
+.readme table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.readme :where(td, th) {
+  border: 1px solid var(--line);
+  padding: 6px 13px;
+}
+.readme hr {
+  border: 0;
+  height: 0.25em;
+  background: var(--line-muted);
+  margin: 1.5em 0;
+}
+.readme summary {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Radar: rotating sweep, ripples on fresh stars, smooth moves when the data changes. */
+@keyframes radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.radar-sweep {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: radar-sweep 9s linear infinite;
+}
+@keyframes radar-ripple {
+  from {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  to {
+    transform: scale(3.4);
+    opacity: 0;
+  }
+}
+.radar-ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: radar-ripple 1.8s ease-out infinite;
+}
+.radar-spoke {
+  transform-box: view-box;
+  transition: transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.radar-dot {
+  transition:
+    cx 800ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    r 400ms ease,
+    opacity 300ms ease;
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.screen-in {
+  animation: screen-in 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
