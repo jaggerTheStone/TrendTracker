@@ -3,6 +3,14 @@
 All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org).
 
+## [Unreleased]
+
+### Added
+
+- Bluesky as a buzz source: public posts that link to a GitHub repository, skipping posts with no likes or reposts
+  and keeping one post per author and repository ([#11](https://github.com/jaggerTheStone/TrendTracker/pull/11), thanks
+  @shubhambaghel34).
+
 ## [0.1.0] - 2026-11-07
 
 First public release: a complete rewrite of the earlier Express prototype (kept under the git tag `legacy-v1`).
@@ -21,4 +29,5 @@ First public release: a complete rewrite of the earlier Express prototype (kept 
 - GitHub Primer look, light and dark themes, phone layout.
 - Embedded Postgres (PGlite) for zero-setup local use, any Postgres in production.
 
+[Unreleased]: https://github.com/jaggerTheStone/TrendTracker/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/jaggerTheStone/TrendTracker/releases/tag/v0.1.0
