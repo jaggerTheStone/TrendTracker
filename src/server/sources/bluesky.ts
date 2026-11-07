@@ -37,10 +37,14 @@ export const blueskySource: SourceAdapter = {
     );
     const mentions: MentionInput[] = [];
     const seen = new Set<string>();
+    const seenAuthorRepos = new Set<string>();
 
     for (const post of data.posts) {
       if (seen.has(post.uri)) continue;
       seen.add(post.uri);
+
+      const score = (post.likeCount ?? 0) + (post.repostCount ?? 0);
+      if (score === 0) continue;
 
       const text = post.record.text;
       const links = [
@@ -51,22 +55,28 @@ export const blueskySource: SourceAdapter = {
       const repos = extractRepos(links.join(" "));
       if (repos.length === 0) continue;
 
+      const author = post.author.handle.toLowerCase();
+      const uniqueRepos = repos.filter((repo) => !seenAuthorRepos.has(`${author}:${repo.toLowerCase()}`));
+      if (uniqueRepos.length === 0) continue;
+      const mentionRepos = uniqueRepos.slice(0, 3);
+
       const publishedAt = new Date(post.record.createdAt ?? post.indexedAt);
       if (Number.isNaN(publishedAt.getTime()) || publishedAt < since) continue;
       const rkey = post.uri.split("/").at(-1);
       if (!rkey) continue;
 
+      for (const repo of mentionRepos) seenAuthorRepos.add(`${author}:${repo.toLowerCase()}`);
       mentions.push({
         source: "bluesky",
         externalId: post.uri,
         title: text.length > 220 ? `${text.slice(0, 218)}…` : text || repos[0],
         url: `https://bsky.app/profile/${encodeURIComponent(post.author.handle)}/post/${encodeURIComponent(rkey)}`,
         author: post.author.handle,
-        score: (post.likeCount ?? 0) + (post.repostCount ?? 0),
+        score,
         comments: post.replyCount ?? 0,
         image: post.embed?.external?.thumb ?? post.embed?.images?.[0]?.thumb ?? null,
         publishedAt,
-        repos: repos.slice(0, 3),
+        repos: mentionRepos,
       });
     }
 

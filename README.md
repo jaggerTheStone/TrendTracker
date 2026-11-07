@@ -57,7 +57,7 @@ projects are genuinely accelerating, not just big.
 | **Explorer**            | Search by name or topic, or paste any GitHub link. Filters by domain and language.                                                                                                                    |
 | **Topics & developers** | Topics and accounts ranked by the stars their repositories gain today.                                                                                                                                |
 | **Compare**             | Up to four repositories side by side, star curves by date or since creation.                                                                                                                          |
-| **Buzz**                | YouTube videos (20 developer channels), Hacker News, Lobsters and Mastodon posts that link to a repository.                                                                                           |
+| **Buzz**                | YouTube videos (20 developer channels), Hacker News, Lobsters, Mastodon and Bluesky posts that link to a repository.                                                                                  |
 | **Boards & alerts**     | Follow repositories in boards, add notes, share a board publicly, get e-mail alerts when one enters Trending or spikes.                                                                               |
 | **README badge**        | A live badge (`#1 on Trending`, `+2.1k ★ this week`) maintainers can paste into their README.                                                                                                         |
 | **AI analyst**          | Optional: what the project is, why it is rising, who it is for (Claude, with `ANTHROPIC_API_KEY`).                                                                                                    |
@@ -120,8 +120,8 @@ Everything is optional for local use. See [`.env.example`](.env.example) for det
   then an extrapolation if we watched at least half of the window; otherwise "—".
 - **Acceleration:** stars in the last 24 h divided by the average of the previous days (or the previous 24 h).
 - **Momentum (0–100):** speed (60 %, percentile among all active repositories), relative growth (15 %), acceleration
-  (10 %) and buzz weighted by source (15 %). A repository outside the ranking is scored against the same pool, so a
-  score means the same thing everywhere.
+  (10 %) and buzz weighted by source (15 %). Bluesky buzz counts likes and reposts. A repository outside the ranking is
+  scored against the same pool, so a score means the same thing everywhere.
 - **Status:** on fire (top 5 % by speed, ≥ 100 ★/day), accelerating (≥ ×1.4 and ≥ 20 ★/day), slowing down (≤ ×0.6),
   new (created less than 7 days ago), otherwise steady.
 - **Snapshots:** at most one every 4 minutes per repository; after 6 hours, one per half hour, then one every 4 hours
@@ -138,6 +138,7 @@ GitHub no longer publishes stargazer lists, so star history starts the day Trend
 | YouTube            | Repositories linked in the descriptions of 20 developer channels (RSS)  |
 | Hacker News        | Stories of the week pointing to a repository                            |
 | Lobsters, Mastodon | GitHub links being shared                                               |
+| Bluesky            | Public posts linking to GitHub repositories (no account required)       |
 
 ## Architecture
 
