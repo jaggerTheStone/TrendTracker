@@ -4,6 +4,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Major versions (TypeScript, ESLint, Node types…) are upgraded by hand, with the code changes they need.
+    ignore:
+      - dependency-name: "*"
+        update-types: [version-update:semver-major]
     groups:
       minor-and-patch:
         update-types: [minor, patch]
