@@ -41,8 +41,8 @@ projects are genuinely accelerating, not just big.
 - **Honest numbers.** Gains over 24 h, 7 days and 30 days come from our own snapshots, read between the two snapshots
   around the start of each window. They always add up (24 h ≤ 7 d ≤ 30 d ≤ total), and when we have not watched long
   enough the app says so instead of guessing.
-- **Context.** Every repository links back to the YouTube videos, Hacker News stories, Lobsters and Mastodon posts that
-  mention it.
+- **Context.** Every repository links back to the YouTube videos, Hacker News stories, Lobsters, Mastodon and Bluesky
+  posts that mention it.
 - **No fake data.** Only public, anonymous sources. Platforms without usable public access (X, Instagram, TikTok,
   Reddit) are not simulated.
 
@@ -187,7 +187,8 @@ and Better Auth.
 
 - [ ] English interface (i18n), then other languages
 - [ ] One-click deploy and a public demo
-- [ ] More sources: Product Hunt, dev.to, Bluesky
+- [x] Bluesky as a buzz source ([#11](https://github.com/jaggerTheStone/TrendTracker/pull/11))
+- [ ] More sources: Product Hunt, dev.to
 - [ ] Topic and language radars, weekly digest page
 - [ ] Docker image
 
