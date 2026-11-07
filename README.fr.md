@@ -44,7 +44,7 @@ de nos propres relevés, GitHub ne publiant plus la liste des stargazers.
 | **Développeurs** (`/dev`)  | Comptes en vue ; page profil : dépôts en vue, populaires, jours dans le Trending                                                                                                                        |
 | **Radar** (`/radar`)       | Un rayon par dépôt, secteurs par domaine, centre = les plus forts (momentum, étoiles 24 h ou accélération), repères verts/rouges d'accélération, ondes à chaque étoile reçue, fil « Ça bouge · 30 min » |
 | **Comparer** (`/comparer`) | Jusqu'à 4 dépôts : courbes d'étoiles (par date ou depuis la création) et tableau de chiffres                                                                                                            |
-| **Buzz** (`/buzz`)         | Vidéos YouTube, Hacker News, Lobsters et Mastodon qui citent un dépôt                                                                                                                                   |
+| **Buzz** (`/buzz`)         | Vidéos YouTube, Hacker News, Lobsters, Mastodon et Bluesky qui citent un dépôt                                                                                                                          |
 | **Suivis** (`/suivis`)     | Tableaux, notes, partage public, activité ; alertes e-mail (menu du compte)                                                                                                                             |
 
 Fiche dépôt (`/r/<owner>/<name>`), mise à jour en direct : étoiles, gains 24 h et 7 j, momentum, badges datés (N°1 du
@@ -68,13 +68,14 @@ Les réglages (thème clair/sombre/auto, période par défaut) sont dans le menu
 
 ## Sources (sans compte)
 
-| Source             | Ce qu'on en tire                                                        |
-| ------------------ | ----------------------------------------------------------------------- |
-| GitHub Trending    | Étoiles gagnées aujourd'hui, cette semaine, ce mois (tous langages + 7) |
-| API GitHub Search  | Nouveaux dépôts qui décollent, métadonnées (sujets, licence, langage)   |
-| YouTube            | Dépôts liés dans les descriptions de 20 chaînes dev (flux RSS publics)  |
-| Hacker News        | Stories de la semaine qui pointent vers un dépôt                        |
-| Lobsters, Mastodon | Liens GitHub partagés                                                   |
+| Source             | Ce qu'on en tire                                                                |
+| ------------------ | ------------------------------------------------------------------------------- |
+| GitHub Trending    | Étoiles gagnées aujourd'hui, cette semaine, ce mois (tous langages + 7)         |
+| API GitHub Search  | Nouveaux dépôts qui décollent, métadonnées (sujets, licence, langage)           |
+| YouTube            | Dépôts liés dans les descriptions de 20 chaînes dev (flux RSS publics)          |
+| Hacker News        | Stories de la semaine qui pointent vers un dépôt                                |
+| Lobsters, Mastodon | Liens GitHub partagés                                                           |
+| Bluesky            | Publications publiques contenant des liens vers des dépôts GitHub (sans compte) |
 
 Instagram, TikTok, X et Reddit n'ont pas d'accès anonyme utilisable : ils ne sont pas simulés.
 
@@ -85,7 +86,8 @@ Instagram, TikTok, X et Reddit n'ont pas d'accès anonyme utilisable : ils ne so
   extrapolation si nous avons observé au moins la moitié de la fenêtre ; sinon « — ». Toujours 24 h ≤ 7 j ≤ 30 j ≤ total.
 - **Accélération** : gain des dernières 24 h divisé par la moyenne des jours précédents (ou par les 24 h d'avant).
 - **Momentum (0–100)** : vitesse (60 %, percentile parmi tous les dépôts actifs), croissance relative (15 %),
-  accélération (10 %) et buzz pondéré par source (15 %). Un dépôt hors classement est noté contre le même ensemble.
+  accélération (10 %) et buzz pondéré par source (15 %). Pour Bluesky, le buzz compte les mentions J'aime et les
+  republications. Un dépôt hors classement est noté contre le même ensemble.
 - **Statut** : en feu (5 % les plus rapides, ≥ 100 ★/j), accélère (≥ ×1,4 et ≥ 20 ★/j), ralentit (≤ ×0,6), nouveau
   (créé il y a moins de 7 jours), sinon stable.
 - **Relevés** : un relevé au plus toutes les 4 minutes par dépôt ; au-delà de 6 h, un par demi-heure, puis un toutes
