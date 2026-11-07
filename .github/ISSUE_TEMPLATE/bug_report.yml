@@ -1,0 +1,38 @@
+name: Bug report
+description: Something does not work or a number looks wrong
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you saw, and what you expected instead. Screenshots help.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open /r/owner/name
+        2. …
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page or repository concerned
+      placeholder: /radar, /r/vercel/next.js…
+  - type: dropdown
+    id: setup
+    attributes:
+      label: Setup
+      options:
+        - Local (npm run dev)
+        - Self-hosted (next start)
+        - Serverless deployment
+  - type: input
+    id: versions
+    attributes:
+      label: Node.js version and OS
+      placeholder: Node 22.11, Windows 11
