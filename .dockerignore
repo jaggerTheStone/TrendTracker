@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.data
+.env*
+!.env.example
+*.tsbuildinfo
+.pnpm-store
+npm-debug.log*
+.DS_Store
+.claude
+.codex
+.agents
+DOCKER_LEARNING_GUIDE.md

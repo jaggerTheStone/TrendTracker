@@ -165,6 +165,100 @@ and Better Auth.
 
 ## Deploy
 
+### Docker Compose (recommended for self-hosting)
+
+The image runs `next build` in a build stage and `next start` on a Node.js 24 runtime, as the unprivileged `node` user.
+Compose adds PostgreSQL 17, applies migrations before the app starts, and keeps the database in a named volume.
+You only need Docker Engine with the Compose plugin on the host; host Node.js is not required.
+
+1. **Configure the environment.** Copy the example file and generate three independent secrets:
+
+   ```bash
+   cp .env.example .env
+   openssl rand -hex 32
+   openssl rand -hex 32
+   openssl rand -hex 32
+   chmod 600 .env
+   ```
+
+   Put the first value in `POSTGRES_PASSWORD`, the second in `BETTER_AUTH_SECRET` and the third in `CRON_SECRET`.
+   Keep `POSTGRES_USER` and `POSTGRES_DB` (defaults: `trendtracker`), and set `BETTER_AUTH_URL` to the public URL
+   (`http://localhost:3001` locally, `https://trends.example.com` in production). Add `GITHUB_TOKEN` and any optional
+   integration keys you need. Compose builds `DATABASE_URL` from the `POSTGRES_*` values; leave its value in `.env`
+   empty.
+
+2. **Start** the stack:
+
+   ```bash
+   docker compose up --build -d
+   docker compose ps
+   docker compose logs --tail=100 app
+   ```
+
+   Wait for `Migrations applied.` and the Next.js startup message, then open <http://localhost:3001>.
+   The app is published on host loopback port 3001 (`127.0.0.1:3001:3000`) to avoid the development server on 3000.
+   PostgreSQL is only reachable by the app over the private Compose network and is not published on the host.
+
+3. **Migrations and scheduling.** The container entrypoint runs `npm run db:migrate` when `DATABASE_URL` is set; a failed
+   migration exits with a nonzero status and prevents the server from starting. The built-in scheduler then collects
+   sources every `INGEST_INTERVAL_MINUTES` (5 by default) and refreshes live star counts every
+   `LIVE_INTERVAL_SECONDS` (60 by default). This single-instance setup should not be scaled to several app replicas,
+   because each replica would run its own scheduler and migrations.
+
+4. **Stop and update.** Take a backup first (see Persistence and backups below), then fetch the reviewed code and rebuild:
+
+   ```bash
+   docker compose down
+   git pull
+   docker compose up --build -d
+   docker compose ps
+   curl --fail --silent --show-error --output /dev/null --write-out '%{http_code}\n' http://localhost:3001
+   ```
+
+   `docker compose down` stops the containers but keeps the named database volume. Never add `-v` unless you intend
+   to delete the database: `docker compose down -v` removes `postgres_data` and all data in it. Expect a short
+   downtime while a single-instance deployment rebuilds and restarts.
+
+5. **Persistence and backups.** The database files live in the `postgres_data` volume, so they survive container
+   recreation and `docker compose down` followed by `up`. A volume is not a backup: dump the database to private
+   storage and copy it off the host.
+
+   ```bash
+   mkdir -p ../trendtracker-backups
+   docker compose exec -T db sh -c 'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Fc' \
+     > ../trendtracker-backups/trendtracker-before-deploy.dump
+   ```
+
+   Use a new filename for each backup, confirm the command succeeded, and keep the dump private. Verify a dump by
+   restoring it into a temporary database (never over the running one):
+
+   ```bash
+   docker compose exec -T db sh -c 'createdb -U "$POSTGRES_USER" trendtracker_restore_check'
+   docker compose exec -T db sh -c 'pg_restore --exit-on-error --no-owner --no-privileges -U "$POSTGRES_USER" -d trendtracker_restore_check' \
+     < ../trendtracker-backups/trendtracker-before-deploy.dump
+   docker compose exec -T db sh -c 'psql -U "$POSTGRES_USER" -d trendtracker_restore_check -c "\dt"'
+   docker compose exec -T db sh -c 'dropdb -U "$POSTGRES_USER" trendtracker_restore_check'
+   ```
+
+6. **Public hosting and secrets.** Keep the app bound to `127.0.0.1` and put a reverse proxy with HTTPS in front of it.
+   For example, a host-based Caddy proxy can use:
+
+   ```caddyfile
+   trends.example.com {
+       reverse_proxy 127.0.0.1:3001
+   }
+   ```
+
+   Set `BETTER_AUTH_URL` to the public HTTPS URL. Secrets are supplied at runtime through `.env`; they are not stored
+   in the image. PostgreSQL initialization variables only apply when the data directory is empty: editing
+   `POSTGRES_PASSWORD` in `.env` does not rotate the password of an existing database user, which requires a separate
+   `ALTER ROLE` (or a database re-initialization).
+
+   If the app does not stay up, read `docker compose logs --tail=100 app` first: an unreachable database or a failed
+   migration is logged there before the server can start.
+
+### Without Docker
+
 1. A Postgres database (Neon, Supabase…) in `DATABASE_URL`, then `npm run db:migrate`.
 2. Set `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `CRON_SECRET`, `GITHUB_TOKEN`, plus Google, SMTP/Resend or Anthropic
    keys as needed.
@@ -190,7 +284,7 @@ and Better Auth.
 - [x] Bluesky as a buzz source ([#11](https://github.com/jaggerTheStone/TrendTracker/pull/11))
 - [ ] More sources: Product Hunt, dev.to
 - [ ] Topic and language radars, weekly digest page
-- [ ] Docker image
+- [x] Docker image and Docker Compose self-hosting ([#8](https://github.com/jaggerTheStone/TrendTracker/issues/8))
 
 Ideas and votes are welcome in [issues](https://github.com/jaggerTheStone/TrendTracker/issues).
 
